@@ -1,0 +1,7 @@
+torch==1.7.1
+numpy==1.19.2
+torchnet==0.0.4
+gensim==4.0.1
+tqdm==4.61.1
+matplotlib==3.3.2
+scikit_learn==0.24.2
