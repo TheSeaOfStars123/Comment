@@ -17,14 +17,17 @@ class DefaultConfig(object):
     wiki_word2vec_50_bin_path = os.getcwd()+'/DataSet/wiki_word2vec_50.bin'
     word_to_id_path = os.getcwd() + '/DataSet/word_to_id.txt'
     corpus_word2vec_path = os.getcwd() + '/DataSet/corpus_word2vec.txt'
-    load_model_path = None
+    # load_model_path = None
+    load_model_path = os.getcwd() + '/checkpoints/TextCNN_0625_13_45_58.pth'
 
     raining_log = os.getcwd() + '/result/training_log'
     tensorboard_path = os.getcwd() + '/tmp/tensorboard'
     loss_file = os.getcwd() + '/result/result_loss'
+    train_acc_file = os.getcwd() + '/result/result_train_acc'
+    valid_acc_file = os.getcwd() + '/result/result_valid_acc'
 
     batch_size = 32
-    use_gpu = True
+    use_gpu = False
     num_workers = 1
     print_frep = 500
     max_epoch = 4
