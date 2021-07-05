@@ -58,13 +58,13 @@ def build_word2vec(fname, word2id, save_to_path=None):
     :return: 语料文本中词汇集对应的word2vec向量{id: word2vec}
     """
     import gensim
-    n_words = max(word2id.values())+1  # 得到词汇表中个数 n_words:58954 59290
+    n_words = max(word2id.values())+1  # 得到词汇表中个数 n_words：59290
     # gensim.models.KeyedVectors.load_word2vec_format导入bin格式
     model = gensim.models.KeyedVectors.load_word2vec_format(fname, binary=True)
     word_vecs = np.array(np.random.uniform(-1., 1., [n_words, model.vector_size]))  # low,high,size vector_size:50 index_to_key:426677
     for word in word2id.keys():
         try:
-            word_vecs[word2id[word]] = model[word]  # word_vecs:58954 59290*50
+            word_vecs[word2id[word]] = model[word]  # word_vecs:59290*50
         except KeyError:
             pass
     if save_to_path:
@@ -87,34 +87,3 @@ def load_corpus_word2vec(corpus_word2vec_path):
             sp = [float(w) for w in line.strip().split()]
             word2vec.append(sp)
     return np.asarray(word2vec)
-
-def load_corpus(path, word2id, max_len = 50, classes=['0', '1']):
-    """
-
-    :param path: 样本语料库的文件
-    :param word2ix: 语料文本中包含的词汇集
-    :param max_len:
-    :param classes:
-    :return: 文本内容contents,以及分类标签labels(onehot形式)
-    """
-    contents, labels = [], []
-    with open(path, encoding='utf-8') as f:
-        for line in f.readlines():
-            sp = line.strip().split()
-            label = sp[0]  # train.txt/validation.txt的每行第一个字符是1/0
-            content = [word2id[w] for w in sp[1:]]
-            content = content[:max_len]
-            if len(content) < max_len:
-                content += [word2id['_PAD_']] * (max_len - len(content))
-            labels.append(label)
-            contents.append(content)
-    counter = Counter(labels)
-    print('总样本数为：%d' %(len(labels)))
-    print('各个类别样本数如下：')
-    for w in counter:
-        print(w, counter[w])
-
-    contents = np.asarray(contents)
-    cat2id = {cat: idx for (idx, cat) in enumerate(classes)}  # 0:'0' 1:'1'
-    labels = np.asarray([cat2id[l] for l in labels])
-    return contents, labels

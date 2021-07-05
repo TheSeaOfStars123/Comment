@@ -59,6 +59,7 @@ def train(**kwargs, ):
 
     # step7 训练前准备工作
     # 绘制图像需要
+    count = 0  # tensorboard需要
     training_loss = []
     train_accs = []
     valid_accs = []
@@ -68,8 +69,6 @@ def train(**kwargs, ):
         """
     prefix = opt.training_log + "_"
     path = time.strftime(prefix + '%m%d_%H:%M:%S.txt')
-    if not os.path.exists(path):
-        os.mkdir(path)
     if not os.path.isfile(path):
         open(path, 'w')
 
@@ -87,7 +86,7 @@ def train(**kwargs, ):
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, labels)
-            prec1 = metrics.accuracy_score(labels, outputs)
+            prec1 = metrics.accuracy_score(labels.cpu().detach().numpy().tolist(), torch.argmax(outputs, dim=1).cpu().detach().numpy().tolist())
             loss.backward()
             optimizer.step()
 
@@ -233,8 +232,9 @@ if __name__ == '__main__':
     if os.path.exists(opt.tensorboard_path):
         shutil.rmtree(opt.tensorboard_path)
         os.mkdir(opt.tensorboard_path)
-    # train()
-    test()
+    train()
+    # test()
     # comment_str1 = "《我不是药神》值得完整五星，叙事，表演，节奏，镜头都是年度最佳，唯一的短板可能就是树了正版药厂这个假敌人，但是国产电影嘛，也要理解，不算主动做恶，只能算被动装傻。"
     # comment_str2 = "比较反感这类戴着批判现实主义帽子的电影却使用了大量讨好大众的商业片常用媚俗技巧（重点表现在笑点与哭点的有意设计）"
     # predict(comment_str2)
+    
